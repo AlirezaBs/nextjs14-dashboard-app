@@ -1,13 +1,13 @@
 import { sql } from "@vercel/postgres"
 import { unstable_noStore as noStore } from "next/cache"
 import {
-  CustomerField,
-  CustomersTable,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  Revenue,
-  User,
+   CustomerField,
+   CustomersTable,
+   InvoiceForm,
+   InvoicesTable,
+   LatestInvoiceRaw,
+   Revenue,
+   User,
 } from "./definitions"
 import { formatCurrency } from "./utils"
 
@@ -165,6 +165,7 @@ export async function fetchInvoiceById(id: string) {
       return invoice[0]
    } catch (error) {
       console.error("Database Error:", error)
+      throw new Error("Failed to fetch invoice.")
    }
 }
 
