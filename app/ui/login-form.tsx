@@ -1,11 +1,21 @@
+"use client"
+
 import { ArrowRightIcon } from "@heroicons/react/20/solid"
-import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline"
+import {
+   AtSymbolIcon,
+   ExclamationCircleIcon,
+   KeyIcon,
+} from "@heroicons/react/24/outline"
+import { useFormState, useFormStatus } from "react-dom"
+import { authenticate } from "../lib/actions"
 import { Button } from "./button"
 import { lusitana } from "./font"
 
 export default function LoginForm() {
+   const [code, dispatch] = useFormState(authenticate, undefined)
+
    return (
-      <form className="space-y-3">
+      <form action={dispatch} className="space-y-3">
          <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
             <h1 className={`${lusitana.className} mb-3 text-2xl`}>
                Please log in to continue.
@@ -53,7 +63,14 @@ export default function LoginForm() {
             </div>
             <LoginButton />
             <div className="flex h-8 items-end space-x-1">
-               {/* Add form errors here */}
+               {code === "CredentialsSignin" ? (
+                  <>
+                     <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+                     <p aria-live="polite" className="text-sm text-red-500">
+                        Invalid credentials
+                     </p>
+                  </>
+               ) : null}
             </div>
          </div>
       </form>
@@ -61,9 +78,16 @@ export default function LoginForm() {
 }
 
 function LoginButton() {
+   const { pending } = useFormStatus()
+
    return (
-      <Button className="mt-4 w-full">
-         Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+      <Button
+         aria-disabled={pending}
+         disabled={pending}
+         className="mt-4 w-full"
+      >
+         Log in (Super safe ;){" "}
+         <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
       </Button>
    )
 }
